@@ -1,7 +1,7 @@
-using AutoCheckUp.Sections.Home;
+﻿using AutoCheckUp.Sections.Home;
 using CommunityToolkit.Mvvm.Input;
 
-namespace CoffeeShop.Sections.Welcome;
+namespace AutoCheckUp.Sections.Welcome;
 
 internal sealed partial class WelcomePageViewModel : BasePageViewModel
 {

@@ -1,3 +1,4 @@
+﻿using System.Diagnostics;
 using AutoCheckUp.Sections.Home;
 using AutoCheckUp.Sections.Welcome;
 
@@ -5,15 +6,15 @@ namespace AutoCheckUp.Services.Navigation;
 
 internal sealed class NavigationService
 {
-    static readonly Lazy<NavigationService> _Lazy = new(() => new());
+    private static readonly Lazy<NavigationService> _lazy = new(() => new());
 
-    public static NavigationService Current => _Lazy.Value;
+    public static NavigationService Current => _lazy.Value;
 
-    readonly Dictionary<Type, Type> _Mappings;
+    private readonly Dictionary<Type, Type> _mappings;
 
     private NavigationService()
     {
-        _Mappings = [];
+        _mappings = [];
 
         CreateViewModelMappings();
     }
@@ -22,8 +23,8 @@ internal sealed class NavigationService
 
     void CreateViewModelMappings()
     {
-        _Mappings.Add(typeof(WelcomePageViewModel), typeof(WelcomePage));
-        _Mappings.Add(typeof(HomePageViewModel), typeof(HomePage));
+        _mappings.Add(typeof(WelcomePageViewModel), typeof(WelcomePage));
+        _mappings.Add(typeof(HomePageViewModel), typeof(HomePage));
     }
 
     public async Task Navigate<TViewModel>(object? parameter = null, bool animated = true)
@@ -60,6 +61,7 @@ internal sealed class NavigationService
         }
         catch (Exception ex)
         {
+            Debug.WriteLine(ex);
             throw;
         }
     }
@@ -67,8 +69,8 @@ internal sealed class NavigationService
     private BindableObject CreateAndBindPage(Type viewModelType)
     {
         // Identifique qual é a página que está mapeada para esta ViewModel
-        var pageType = _Mappings!.ContainsKey(viewModelType) ?
-            _Mappings[viewModelType] :
+        var pageType = _mappings!.ContainsKey(viewModelType) ?
+            _mappings[viewModelType] :
             throw new KeyNotFoundException(message: "A ViewModel de destino não possui um mapeamento registrado");
 
         // Criar uma instância da página através do tipo da página
